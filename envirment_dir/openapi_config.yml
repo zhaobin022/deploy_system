@@ -1,0 +1,34 @@
+app_prefix: openapi
+backup_dir: backup
+base_dir: /var/lib/jenkins/workspace
+builds_dir: builds
+changelog_dir: changelog
+email_list:
+  admin: zhaobin@tjpme.com,abc@abc.com
+  develop: 1.abc.com
+  test: 1.abc.com
+env_directory: env_directory
+java_app_file_path: roles/javaapps/files
+java_app_template_path: roles/javaapps/templates
+jenkins_config:
+  password: e0f51bfdafb9bcccec1ab1e59aac0e41
+  url: http://10.12.208.89:8080
+  username: admin
+last_fun_successful_dir: last_successful/fun
+last_uat_successful_dir: last_successful/uat
+lastversion: 1.0.0.0
+mn_prod_deploy_job: mn_deploy
+production_mount_point: /u05/release
+sp_prod_deploy_job: sp_deploy
+uat_job_name: BUILD-apigateway
+version: 1.0.0.0_temp
+web_app_file_path: roles/webapps/files
+web_app_template_path: roles/webapps/templates
+webapps:
+  apigateway:
+    http_port: 8813
+    http_type: http
+    https_port: 8445
+    jvm_size: 2048
+    shut_port: 8010
+    tomcatname: apigateway-tomcat6

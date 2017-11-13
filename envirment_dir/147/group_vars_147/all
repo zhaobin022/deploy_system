@@ -1,0 +1,241 @@
+#############last.version
+last.version: v3_3.3.8.3
+###basedir
+basedir: /home/pmes/pmes_rac
+### activemq_url
+activemq_url: failover:(tcp://10.12.9.147:61616,tcp://10.12.9.147:61616)?randomize=true&timeout=10000
+
+####AESKey
+AESKey: hhsdiw72sc52hs6d
+fmAESKey: hhsdiw72sc52hs6d
+ftpKey: hsddiw72sc52hs6g
+
+### server ip
+
+memcache1_ip: 10.12.9.147
+memcache1_port: 11211
+memcache2_ip: 10.12.9.147
+memcache2_port: 11211
+
+#-------tradeweb
+tradecache1_ip: 10.12.9.147
+tradecache1_port: 18010
+tradecache2_ip: 10.12.9.147
+tradecache2_port: 28010
+
+#-------tradeweb
+firmPlatform1_ip: 10.12.9.147
+firmPlatform1_port: 8811
+firmPlatform2_ip: 10.12.9.147
+firmPlatform2_port: 8811
+
+#-------tradeweb
+money1_ip: 10.12.9.147
+money1_port: 8811
+money2_ip: 10.12.9.147
+money2_port: 8811
+
+#-------sessionserver
+sms1_ip: 10.12.9.102
+sms1_port: 80
+sms2_ip: 10.12.9.102
+sms2_port: 9080
+
+#-------selfmember
+fcs4exchange_ip: 10.12.9.147
+fcs4exchange_port: 15067
+fcs4member_ip: 10.12.9.147
+fcs4member_port: 15065
+fcs4capital_ip: 10.12.9.147
+fcs4capital_port: 15063
+fundpay_ip: 10.12.9.147
+fundpay_port: 15010
+firmSign: S
+
+
+#-------aeweb
+naedelivery1_ip: 10.12.9.123
+naedelivery1_port: 18060
+naedelivery2_ip: 10.12.9.123
+naedelivery2_port: 28060
+
+#-------fmtradeweb
+fmtradecache1_ip: 10.12.9.147
+fmtradecache1_port: 38011
+fmtradecache2_ip: 10.12.9.147
+fmtradecache2_port: 48011
+
+#-------fmtradeweb
+fmfirmPlatform1_ip: 10.12.9.147
+fmfirmPlatform1_port: 8811
+fmfirmPlatform2_ip: 10.12.9.147
+fmfirmPlatform2_port: 8811
+
+### DB_trade
+tradedb1_ip: 10.12.9.213
+tradedb1_port: 1522
+tradedb1_sid: spft123
+tradedb2_ip: 10.12.9.213
+tradedb2_port: 1522
+tradedb2_sid: spft123
+tradedb_username: 94A8B21FF28A99A27208B736EB620678
+tradedb_username_view: trade
+tradedb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+tradedb_passwd_view: 1234qwer147
+tradedb_secureKey: 12345678
+
+### DB_funds
+fundsdb1_ip: 10.12.9.213
+fundsdb1_port: 1522
+fundsdb1_sid: spft123
+fundsdb2_ip: 10.12.9.213
+fundsdb2_port: 1522
+fundsdb2_sid: spft123
+fundsdb_username: E3124D9E4C4DB3CB706CFDEC89344DC4
+fundsdb_username_view: funds
+fundsdb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+fundsdb_passwd_view: 1234qwer147
+fundsdb_secureKey: 12345678
+
+### DB_masterdata
+masterdatadb1_ip: 10.12.9.213
+masterdatadb1_port: 1522
+masterdatadb1_sid: spft123
+masterdatadb2_ip: 10.12.9.213
+masterdatadb2_port: 1522
+masterdatadb2_sid: spft123
+masterdatadb_username: 097807E65575511848C05A268F15946C
+masterdatadb_username_view: masterdata
+masterdatadb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+masterdatadb_passwd_view: 1234qwer147
+masterdatadb_secureKey: 12345678
+
+### DB_settledb
+settledb1_ip: 10.12.9.213
+settledb1_port: 1522
+settledb1_sid: spft123
+settledb2_ip: 10.12.9.213
+settledb2_port: 1522
+settledb2_sid: spft123
+settledb_username: 7B810BF82F7C234168BCDE2642ECDC88
+settledb_username_view: nsettle
+settledb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+settledb_passwd_view: 1234qwer147
+settledb_secureKey: 12345678
+
+### DB_interest
+interestdb1_ip: 10.12.9.213
+interestdb1_port: 1522
+interestdb1_sid: spft123
+interestdb2_ip: 10.12.9.213
+interestdb2_port: 1522
+interestdb2_sid: spft123
+interestdb_username: 84BDF0AF6B9C50E60094F92BCD1BD417
+interestdb_username_view: interest
+interestdb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+interestdb_passwd_view: 1234qwer147
+interestdb_secureKey: 12345678
+
+### DB_query
+querydb1_ip: 10.12.9.213
+querydb1_port: 1522
+querydb1_sid: spft123
+querydb2_ip: 10.12.9.213
+querydb2_port: 1522
+querydb2_sid: spft123
+querydb_username: 6D53733AC4BE5DEB85D069F1F4D346FA
+querydb_username_view: query
+querydb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+querydb_passwd_view: 1234qwer147
+querydb_secureKey: 12345678
+
+### DB_crudeoil
+crudeo1_ip: 10.12.9.80
+crudeo1_port: 1521
+crudeo1_sid: pmes
+crudeo2_ip: 10.12.9.80
+crudeo2_port: 1521
+crudeo2_sid: pmes
+crudeo_username: 790D539CACB993BCB046EC301FA62CD7
+crudeo_username_view: crudeoil
+crudeo_passwd: A04FD040DB68785A126C257116D9EEE9
+crudeo_passwd_view: password
+crudeo_secureKey: 12345678
+
+### DB_monitor
+monitordb1_ip: 10.12.9.213
+monitordb1_port: 1522
+monitordb1_sid: spft123
+monitordb2_ip: 10.12.9.213
+monitordb2_port: 1522
+monitordb2_sid: spft123
+monitordb_username: 3E487C2FDC3D537032EEB601DD8A67F5
+monitordb_username_view: monitor
+monitordb_passwd: 2397FA90C610B0D4E9D0CAFED4BF14C9
+monitordb_passwd_view: 1234qwer147
+monitordb_secureKey: 12345678
+
+### DB_cms
+cmsdb1_ip: 10.12.9.80
+cmsdb1_port: 1521
+cmsdb1_sid: spft123
+cmsdb2_ip: 10.12.9.80
+cmsdb2_port: 1521
+cmsdb2_sid: spft123
+cmsdb_username: C178C0CFA2E5F06A1BD5223EDF5B7807
+cmsdb_username_view: tpmeaccount
+cmsdb_passwd: A04FD040DB68785A126C257116D9EEE9
+cmsdb_passwd_view: password
+cmsdb_secureKey: 12345678
+
+
+
+### redis_server openapi
+
+redis1_addr: 10.12.6.71
+redis1_port: 6380
+redis2_addr: 10.12.6.72
+redis2_port: 6380
+redis3_addr: 10.12.6.73
+redis3_port: 6380
+redis4_addr: 10.12.6.74
+redis4_port: 6380
+redis5_addr: 10.12.6.75
+redis5_port: 6380
+redis6_addr: 10.12.6.76
+redis6_port: 6380
+
+
+
+####################redis openapi for apicache ####################
+apicache_redis_maxIdle: 1000
+apicache_redis_maxWait: 2000
+apicache_redis_testOnBorrow: true
+apicache_redis_testOnReturn: true
+apicache_redis_maxActive: 10000
+apicache_redis_timeout: 500
+apicache_redis_cluster_clusters: 10.12.6.71:6380,10.12.6.72:6380,10.12.6.73:6380,10.12.6.74:6380,10.12.6.75:6380,10.12.6.76:6380
+apicache_redis_cluster_max_redirects: 3
+
+
+
+##########################trade cache rmi config#########################
+openapi_tradecache_pollMaxNumOnce: 5000
+openapi_tradecache_pollTradeInterval: 1000
+openapi_tradecache_pollOrderInterval: 1000
+openapi_tradecache_units: 610
+####openapi apidate parameter ##########
+datagateway_session_num_limit: 100000
+datagateway_cache_pollTradeInterval: 0
+datagateway_cache_pollOrderInterval: 0
+datagateway_cache_units: 610
+#redis openapi for datagateway
+datagateway_redis_maxIdle: 1000
+datagateway_redis_maxWait: 2000
+datagateway_redis_testOnBorrow: true
+datagateway_redis_testOnReturn: true
+datagateway_redis_maxActive: 10000
+datagateway_redis_timeout: 500
+datagateway_redis_cluster_clusters: 10.12.6.71:6380,10.12.6.72:6380,10.12.6.73:6380,10.12.6.74:6380,10.12.6.75:6380,10.12.6.76:6380
+datagateway_redis_cluster_max_redirects: 3
+

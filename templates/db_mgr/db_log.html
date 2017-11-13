@@ -1,0 +1,251 @@
+{% extends "db_mgr/db_detail.html" %}
+{% load db_mgr_tags %}
+{% block page-level-sytle %}
+    <link rel="stylesheet" type="text/css" href="/static/media/css/select2_metro.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/media/css/chosen.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/media/css/multi-select-metro.css"/>
+    <link href="/static/media/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block db_list_memu %}
+{% include "base/db_active_memu.html" %}
+{% endblock %}
+{% block container-fluid %}
+    <div class="row-fluid">
+
+        <div class="span12">
+
+            {% include "base/style-custom.html" %}
+
+            <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+            <h3 class="page-title">
+
+                数据库执行日志记录 ({{ db_obj.name }})
+
+            </h3>
+
+            <ul class="breadcrumb">
+
+                <li>
+
+                    <i class="icon-home"></i>
+
+                    <a href="/">Home</a>
+
+                    <i class="icon-angle-right"></i>
+
+                </li>
+
+                <li>
+                    <a href="#">数据库管理</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+
+                <li>
+                    <a href="{% url 'db_list' %}">数据库列表</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'db_detail' obj_id %}">数据库详细信息</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'db_log_list' obj_id %}">脚本执行日志</a>
+                </li>
+            </ul>
+
+            <!-- END PAGE TITLE & BREADCRUMB-->
+
+        </div>
+
+    </div>
+
+    <div class="row-fluid">
+
+
+					<div class="span12">
+
+						<!-- BEGIN CONDENSED TABLE PORTLET-->
+
+						<div class="portlet box blue">
+
+							<div class="portlet-title">
+
+								<div class="caption"><i class="icon-picture"></i>执行日志</div>
+
+							</div>
+							<div class="portlet-body">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <form  method="get">
+                                            <select id="svn_id" name="svn_id" class="span5" data-placeholder="Choose a svn path" tabindex="1">
+{#                                            <select id="svn_id" name="svn_id" class="span5 chosen"  tabindex="1">#}
+
+												<option value=""></option>
+                                                {% for r in svn_list %}
+                                                    {% judge_selected svn_id r.svn__id as selected_status%}
+                                                    {% if selected_status %}
+                                                        <option value="{{ r.svn__id }}" selected>{{ r.svn__path }}</option>
+                                                    {% else %}
+                                                        <option value="{{ r.svn__id }}">{{ r.svn__path }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+
+											</select>
+                                            <input type="text" placeholder="search file name" class="m-wrap small" name="q" value="{{ q }}" id="q">
+                                            <input type="hidden" name="page" value="{{ log_list.number }}">
+                                            <button class="btn blue">Search</button>
+                                            <a href="{% url 'db_log_list' obj_id %}" class="btn blue">Reset</a>
+                                        </form>
+                                    </div>
+                                </div>
+
+								<table class="table table-condensed table-hover">
+
+									<thead>
+
+										<tr>
+
+											<th>#</th>
+											<th>数据库名</th>
+											<th>svn路径</th>
+											<th>sql脚本名称</th>
+											<th>状态</th>
+											<th>执行用户</th>
+											<th>执行时间</th>
+											<th>查看日志</th>
+
+										</tr>
+
+									</thead>
+									<tbody>
+                                    {% for r in log_list %}
+                                        <tr>
+                                            <td>{{ r.id }}</td>
+                                            <td>{{ r.db.name }}</td>
+                                            <td>{{ r.svn.path }}</td>
+                                            <td>{{ r.sql_file_name }}</td>
+                                            <td>
+                                                {% ifequal r.status 1  %}
+                                                    <span class="label label-important">{{ r.get_status_display }}</span>
+                                                {% else %}
+                                                    <span class="label label-success">{{ r.get_status_display }}</span>
+                                                {% endifequal %}
+
+                                            </td>
+                                            <td>{{ r.user.username  }}</td>
+                                            <td>{{ r.create_time |date:"Y-m-d H:i:s" }}</td>
+                                            <td><a  class="btn mini blue-stripe"   onclick="get_log_detail({{ r.id }})">View</a></td>
+                                        </tr>
+                                    {% endfor %}
+									</tbody>
+								</table>
+
+							</div>
+
+                        </div>
+                        <div class="pagination pull-right">
+                          <ul>
+                            {% if log_list.has_previous %}
+                                <li><a href="?page={{ log_list.previous_page_number }}&q={{ q }}&svn_id={{ svn_id }}">Prev</a></li>
+                            {% endif %}
+                            {% for p_num in paginator.page_range  %}
+                                {% judge_current_page p_num  log_list.number q svn_id %}
+                            {% endfor %}
+{#                            <li><a href="#">1</a></li>#}
+{#                            <li><a href="#">2</a></li>#}
+{#                            <li><a href="#">3</a></li>#}
+{#                            <li><a href="#">4</a></li>#}
+{#                            <li><a href="#">5</a></li>#}
+                            {% if log_list.has_next  %}
+                                <li><a href="?page={{ log_list.next_page_number  }}&q={{ q }}&svn_id={{ svn_id }}">Next</a></li>
+                            {% endif %}
+                          </ul>
+                        </div>
+						<!-- END CONDENSED TABLE PORTLET-->
+
+					</div>
+
+				</div>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70%;margin-left: -400px;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+    <h3 id="myModalLabel">Log Detail</h3>
+  </div>
+  <div class="modal-body">
+    <pre id="logcontent"></pre>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+<a id="trigger_link" class="hidden"  href="#myModal" data-toggle="modal"></a>
+
+
+{% endblock %}
+
+{% block page-level-plugin %}
+    <script type="text/javascript" src="/static/media/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/static/media/js/additional-methods.min.js"></script>
+    <script type="text/javascript" src="/static/media/js/select2.min.js"></script>
+    <script type="text/javascript" src="/static/media/js/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="/static/media/js/jquery.multi-select.js"></script>
+    <script type="text/javascript" src="/static/media/js/wysihtml5-0.3.0.js"></script>
+    <script type="text/javascript" src="/static/media/js/bootstrap-datetimepicker.js"></script>
+
+
+
+{% endblock %}
+
+
+{% block page-level-scripts %}
+    <script src="/static/media/js/app.js"></script>
+    <script src="/static/media/js/form-components.js"></script>
+	<script src="/static/media/js/ui-general.js"></script>
+    <script>
+
+        jQuery(document).ready(function () {
+
+            // initiate layout and plugins
+
+            App.init();
+
+            $('#svn_id').select2({
+                placeholder: "Select an Option",
+                allowClear: true
+            });
+{#            FormComponents.init();#}
+        });
+
+        function  get_log_detail(log_id) {
+            $("#cover-level").removeClass("hidden");
+            $("#logcontent").text("");
+            $.ajax({
+                type: "POST",
+                url:"{% url 'db_log_detail' %}",
+                data:{log_id: log_id},
+                error: function(request) {
+                    $("#cover-level").addClass("hidden");
+                    alert("Connection error");
+                },
+                success: function(data) {
+                    var ret = JSON.parse(data);
+                    if (ret["status"] == true) {
+                        $("#logcontent").text(ret["data"]);
+                        $("#trigger_link").click();
+                    } else {
+                        alert(ret["msg"]);
+                    };
+                    $("#cover-level").addClass("hidden");
+                }
+            });
+        };
+        function  clear_search_val() {
+            $("#q").val("");
+            $("#svn_id").val("");
+        }
+    </script>
+{% endblock %}

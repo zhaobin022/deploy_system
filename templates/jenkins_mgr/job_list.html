@@ -1,0 +1,307 @@
+{% extends "base/index.html" %}
+{% load  jenkins_mgr_tags %}
+{% block page-level-sytle %}
+
+
+{#	<link rel="stylesheet" type="text/css" href="/static/media/css/select2_metro.css" />#}
+	<link rel="stylesheet" type="text/css" href="/static/media/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" href="/static/media/css/DT_bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/media/css/sweetalert.css">
+{% endblock %}
+
+{% block jenkins_mgr_memu %}
+{% include "base/jenkins_active_memu.html" %}
+{% endblock %}
+{% block container-fluid %}
+    <div class="row-fluid">
+
+        <div class="span12">
+
+{% include "base/style-custom.html" %}
+
+            <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+            <h3 class="page-title">
+
+                Jenkins服务器({{ jenkins_server_obj.server_name }})上job列表
+
+            </h3>
+
+            <ul class="breadcrumb">
+
+                <li>
+
+                    <i class="icon-home"></i>
+
+                    <a href="/">Home</a>
+
+                    <i class="icon-angle-right"></i>
+
+                </li>
+
+
+                <li>
+                    <a href="{% url 'jenkinsserver_list' %}">服务器列表</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+
+                <li>
+                    <a href="{% url 'project_list' jenkins_server_id %}">项目列表</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'job_list' jenkins_server_obj.id project_id %}">服务器({{ jenkins_server_obj.server_name }})上{{ project_obj.name }}_{{ project_obj.version.name }}项目job列表</a>
+                </li>
+            </ul>
+
+            <!-- END PAGE TITLE & BREADCRUMB-->
+
+        </div>
+
+    </div>
+
+
+
+    <!--
+
+        job_name = models.CharField(max_length=128)
+    notify_group = models.ManyToManyField(Group)
+    project = models.ForeignKey(cmdb_models.Project)
+
+    action_type=models.ForeignKey(Operation)
+    jenkins_server = models.ForeignKey(JenkinsServer)
+
+
+    -->
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+
+                        <div class="caption"><i class="icon-picture"></i>BUILD JOB</div>
+
+                </div>
+            <div class="portlet-body">
+                <div class="row-fluid pull-right">
+                                                                    </br>
+
+                    <span ><button class="btn blue" id="select_all">全选</button></span>
+                    <span ><button class="btn blue" id="reverse">反选</button></span>
+                    <span ><button class="btn blue" id="cancel">取消</button></span>
+                    <span class="pull-right"><button class="btn blue" id="batch_build">批量BUILD</button></span>
+                            </br>
+                            </br>
+
+                </div>
+
+                <div class="row-fluid">
+                    <table class="table table-bordered" id="build_job_list">
+                        <thead>
+                            <th>job名</th>
+                            <th>job类型</th>
+                            <th>项目名</th>
+                            <th>URL</th>
+                            <th>最后一次构建SVN</th>
+                            <th>最后一次构建NUMBER</th>
+                            <th>最后一次构建时间</th>
+                            <th>最后一次构建状态</th>
+                            <th>是否自动构建</th>
+                            <th>操作</th>
+                        </thead>
+                        <tbody>
+                        {% for i in jenkins_pro_job_list %}
+                            {% if i.job_type == 2 %}
+                                <tr class="odd gradeX">
+                                    <td>{{ i.job_name }}</td>
+                                    <td>{{ i.get_job_type_display }}</td>
+                                    <td>{{ i.project }}</td>
+                                    <td>{% get_url_list i %}</td>
+                                    {% get_last_buid_info_dict i  as info_dict %}
+                                    {% if info_dict %}
+                                             <td>{{ info_dict.sn_in_jenkins }}</td>
+                                             <td>{{ info_dict.number }}</td>
+                                             <td>{{ info_dict.datetime }}</td>
+                                             <td>{{ info_dict.result }}</td>
+
+                                    {% else %}
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                    {% endif %}
+                                    <td>
+                                        {% if i.auto_build %}
+                                            已开启
+                                        {% else %}
+                                            已关闭
+                                        {% endif %}
+                                    </td>
+                                    <td><a class="btn blue" href="{% url 'job_detail' i.id %}">BUILD</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+
+                        <div class="caption"><i class="icon-picture"></i>DEPLOY JOB</div>
+
+                </div>
+            <div class="portlet-body">
+
+                <div class="row-fluid">
+
+                    <table class="table table-bordered" id="other_job_list">
+                            <thead>
+                                <th>job名</th>
+                                <th>job类型</th>
+                                <th>项目名</th>
+                                <th>最后一次构建NUMBER</th>
+                                <th>最后一次构建时间</th>
+                                <th>最后一次构建状态</th>
+                                <th>操作</th>
+                            </thead>
+                            <tbody>
+                            {% for i in jenkins_pro_job_list %}
+                                {% if i.job_type != 2 %}
+
+                                <tr class="odd gradeX">
+                                    <td>{{ i.job_name }}</td>
+                                    <td>{{ i.get_job_type_display }}</td>
+                                    <td>{{ i.project }}</td>
+                                    {% get_last_buid_info_dict i  as info_dict %}
+                                    {% if info_dict %}
+                                             <td>{{ info_dict.number }}</td>
+                                             <td>{{ info_dict.datetime }}</td>
+                                             <td>{{ info_dict.result }}</td>
+
+                                    {% else %}
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                    {% endif %}
+
+                                    <td><a class="btn blue" href="{% url 'job_detail' i.id %}">BUILD</a></td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block page-level-plugin %}
+    <script type="text/javascript" src="/static/media/js/select2.min.js"></script>
+	<script type="text/javascript" src="/static/media/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="/static/media/js/DT_bootstrap.js"></script>
+	<script type="text/javascript" src="/static/media/js/sweetalert.min.js"></script>
+
+{% endblock %}
+
+{% block page-level-scripts %}
+
+    <script src="/static/media/js/app.js"></script>
+	<script>
+
+		jQuery(document).ready(function() {
+
+		   App.init();
+
+            $('#build_job_list').dataTable();
+            $('#other_job_list').dataTable();
+
+            $('#build_job_list tbody').on('click', 'tr', function (){
+                $(this).toggleClass('selected');
+            });
+
+            $('#batch_build').click(function() {
+
+                var job_name_list = new Array();
+                 $('#build_job_list tbody').find('.selected').each(function () {
+                     var job_name = $(this).children().eq(0).text();
+                     job_name_list.push(job_name);
+                 });
+                 console.log(job_name_list);
+                 if (job_name_list.length == 0 ) {
+                    swal("必须选中job");
+                 } else  {
+                     $.post("{% url 'batch_build' %}",
+                      {
+                        jenkins_server_id:{{ jenkins_server_id }},
+                        project_id:{{ project_id }},
+                        job_name_list:JSON.stringify(job_name_list)
+                      },
+                      function(data,status){
+                        var ret = JSON.parse(data);
+                        if (ret.status == true) {
+                            swal(ret.msg);
+    {#                        alert(ret.msg);#}
+                        } else  if (ret.status == false) {
+                            swal(ret.msg);
+                        };
+                      });
+                 };
+
+            });
+            $('#select_all').click(function () {
+                $('#build_job_list tbody').find('tr').each(function () {
+                    if ( !$(this).hasClass("selected")){
+                      $(this).addClass("selected");
+                    };
+                });
+            });
+
+
+            $('#reverse').click(function () {
+                $('#build_job_list tbody').find('tr').each(function () {
+                    if ( $(this).hasClass("selected")){
+                        $(this).removeClass("selected");
+                    } else {
+                        $(this).addClass("selected");
+                    };
+                });
+            });
+
+            $('#cancel').click(function () {
+                $('#build_job_list tbody').find('tr').each(function () {
+                    if ( $(this).hasClass("selected")){
+                      $(this).removeClass("selected");
+                    };
+                });
+            });
+
+
+{#            #}
+{#                                <span ><button class="btn blue" id="select_all">全选</button></span>#}
+{#                    <span ><button class="btn blue" id="reverse">反选</button></span>#}
+{#                    <span ><button class="btn blue" id="cancel">取消</button></span>#}
+
+
+
+
+        });
+{#        $('#job_list').find('thead th').css('width', 'auto');#}
+	</script>
+{% endblock %}

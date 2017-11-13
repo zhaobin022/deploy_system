@@ -1,0 +1,18 @@
+{% load deploy_tags %}
+<li class="open">
+
+    <a href="javascript:;">
+
+    <i class="fa fa-book"></i>
+
+    <span class="title">证书管理</span>
+
+    <span class="arrow "></span>
+
+    </a>
+
+    <ul class="sub-menu" style="display: block;">
+        {% gen_deploy_menu enabled_admins request "certmgr" %}
+    </ul>
+
+</li>

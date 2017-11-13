@@ -1,0 +1,26 @@
+{% load deploy_tags %}
+<li class="open">
+    <a href="javascript:;">
+    <i class="icon-th"></i>
+    <span class="title">部署管理</span>
+    <span class="arrow "></span>
+    </a>
+    <ul class="sub-menu" style="display: block;">
+
+        <li class="open">
+
+        <a href="javascript:;">
+        部署配置管理
+        <span class="arrow"></span>
+        </a>
+        <ul class="sub-menu" style="display: block;">
+        {% gen_deploy_menu enabled_admins request "cmdb" %}
+        </ul>
+        </li>
+                                    <li >
+                                <a href="#">
+                                     部署执行
+                                </a>
+                            </li>
+    </ul>
+</li>

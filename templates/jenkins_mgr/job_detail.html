@@ -1,0 +1,662 @@
+{% extends "base/index.html" %}
+{% load jenkins_mgr_tags %}
+{% block page-level-sytle %}
+{#	<link rel="stylesheet" type="text/css" href="/static/media/css/select2_metro.css" />#}
+{#    <link rel="stylesheet" type="text/css" href="/static/media/css/multi-select-metro.css" />#}
+	<link rel="stylesheet" href="/static/media/css/DT_bootstrap.css" />
+	<link rel="stylesheet" href="/static/media/css/multi-select.css" />
+	<link rel="stylesheet" href="/static/media/css/application.css" />
+
+
+
+{% endblock %}
+{% block jenkins_mgr_memu %}
+{% include "base/jenkins_active_memu.html" %}
+{% endblock %}
+{% block container-fluid %}
+       <div class="row-fluid">
+
+        <div class="span12">
+
+{% include "base/style-custom.html" %}
+
+           <div id="responsive" class="modal hide fade bs-example-modal-lg" tabindex="-1" data-width="760" style="border-radius: 15px;">
+
+									<div class="modal-header">
+
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+
+										<h3>Email List</h3>
+
+									</div>
+
+                                    <form method="post">
+
+                                        <div class="modal-body">
+                                            <div style="margin-left: 70px">
+
+                                                <select name="job_emails"  multiple='multiple' class="searchable">
+                                                    {% for e in email_list %}
+                                                        <option
+                                                            {% if e.id in select_email_ids %}
+                                                                selected
+                                                            {% endif %}
+                                                            value="{{ e.id }}">{{ e }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            <input type="hidden" name="change_email" value="yes">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <button type="button" data-dismiss="modal" class="btn">Close</button>
+
+                                            <button type="submit" class="btn blue">Save changes</button>
+
+                                        </div>
+                                    </form>
+
+
+								</div>
+
+            <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+            <h3 class="page-title">
+            {% block right-title %}
+                Jenkins Job ({{ job_obj.job_name }})
+            {% endblock %}
+            </h3>
+
+            <ul class="breadcrumb">
+
+                <li>
+
+                    <i class="icon-home"></i>
+
+                    <a href="/">Home</a>
+
+                    <i class="icon-angle-right"></i>
+
+                </li>
+
+                <li>
+                    <a href="{% url 'jenkinsserver_list' %}">服务器列表</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'project_list' jenkins_server_obj.id %}">项目列表</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'job_list' jenkins_server_obj.id job_obj.project.id %}">服务器({{ jenkins_server_obj.server_name }})上{{ project_obj.name }}_{{ project_obj.version.name }}项目job列表</a>
+                </li>>
+                <li>
+                    <a href="{% url 'job_detail' job_obj.id %}">Job ({{ job_obj.job_name }})</a>
+                    <i class="icon-angle-right"></i>
+
+                </li>
+                <li>
+                    <a href="{% url 'job_builds_list' job_obj.id %}">Job ({{ job_obj.job_name }})构建历史列表 </a>
+                </li>
+
+            </ul>
+
+            <!-- END PAGE TITLE & BREADCRUMB-->
+
+        </div>
+
+    </div>
+
+
+
+
+    {% block job_detail_content %}
+    <div class="row-fluid">
+
+        <div class="span12">
+
+            <!-- BEGIN SAMPLE FORM PORTLET-->
+
+            <div class="portlet box blue tabbable">
+
+                <div class="portlet-title">
+
+                    <div class="caption">
+
+                        <i class="icon-reorder"></i>
+
+                        <span class="hidden-480">job({{ job_obj.job_name }})详细信息</span>
+
+                    </div>
+
+                </div>
+
+                <div class="portlet-body form">
+
+                    <div class="tabbable portlet-tabs">
+
+                        <ul class="nav nav-tabs">
+
+
+                            <li class="active"><a href="#portlet_tab1" data-toggle="tab">Default</a></li>
+
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div class="tab-pane active" id="portlet_tab1">
+
+
+
+                            <!--
+
+
+
+                            -->
+                                <form id="build_form" class="form-horizontal" method="post">
+                                <!-- BEGIN FORM-->
+                                        <div class="control-group">
+                                            <label class="control-label">{{ job_form.job_name.label }}</label>
+                                            <div class="controls">
+{#                                                <input type="text" placeholder="small" class="m-wrap small" />#}
+                                                {{ job_form.job_name }}
+
+                                            {% if field.errors %}
+                                                <span class="help-block" style="color: red">{{ job_form.job_name.errors.0 }}</span>
+                                            {% endif %}
+                                            </div>
+                                        </div>
+                                        {% if svn_url %}
+                                            <div class="control-group">
+                                                <label class="control-label">SVN地址</label>
+                                                <div class="controls">
+    {#                                                <input type="text" placeholder="small" class="m-wrap small" />#}
+                        <input type="text"  value="{{ svn_url }}"  readonly="" required="" class="span6 m-wrap" maxlength="128">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if svn_number_on_server %}
+                                            <div class="control-group">
+                                                <label class="control-label">svn服务器当前版本</label>
+                                                <div class="controls">
+    {#                                                <input type="text" placeholder="small" class="m-wrap small" />#}
+                        <input type="text"  value="{{ svn_number_on_server }}"  readonly="" required="" class="span6 m-wrap" maxlength="128">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+
+
+
+                                        {% if last_build_sn %}
+                                            <div class="control-group">
+                                                <label class="control-label">最后一次build的svn号</label>
+                                                <div class="controls">
+    {#                                                <input type="text" placeholder="small" class="m-wrap small" />#}
+                                                    <input type="text"  value="{{ last_build_sn }}"  readonly="" required="" class="span6 m-wrap" maxlength="128">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                            <div class="control-group">
+                                                <label class="control-label">job类型</label>
+                                                <div class="controls">
+{#                                                    <input name="job_type" class="span6 m-wrap" type="text"  readonly value="{{ job_form.instance.get_job_type_display }}" >#}
+                                                     <select id="job_type" class="span6 m-wrap" data-placeholder="Choose a Action" tabindex="1"  name="job_type" readonly>
+                                                         <option value="{{ job_obj.job_type }}" >{{ job_obj.get_job_type_display }}</option>
+{#                                                         {{ job_form.job_type }}#}
+                                                     </select>
+                                                </div>
+                                            </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">项目名</label>
+                                            <div  class="controls">
+{#                                                <input type="text" placeholder="small" class="m-wrap" readonly value="{% get_mail_list  job_form.instance %}" >#}
+                                                <input class="span6 m-wrap" type="text" name="porject" readonly value="{% get_project_name  job_form.instance %}" >
+{#                                            {{ job_form.notify_group }}#}
+                                            </div>
+                                            {% if field.errors %}
+                                                <span class="help-block" style="color: red">{{ job_form.project.errors.0 }}</span>
+                                            {% endif %}
+
+                                        </div>
+
+
+
+
+
+
+
+                                        <div class="control-group">
+
+                                            <label class="control-label">发送邮件列表</label>
+
+                                            <div  class="controls">
+
+{#                                                <input type="text" placeholder="small" class="m-wrap" readonly value="{% get_mail_list  job_form.instance %}" >#}
+                                                <input class="span6 m-wrap" type="text"  readonly value="{{ email_str }}" >
+                                                <span><a class="btn blue" data-toggle="modal" href="#responsive">Change Email</a></span>
+{#                                            {{ job_form.notify_group }}#}
+                                            </div>
+
+
+                                        </div>
+
+
+
+
+
+
+{#                                {% if job_obj.job_type != 3 and job_obj.job_type != 4 %}#}
+{#                                    {% if  job_form.instance.action_type and job_form.instance.action_type.operation_value != "build" or not job_form.instance.action_type%}#}
+{#                                         <div class="control-group">#}
+{#                                            <label class="control-label">应用列表</label>#}
+{#                                            <div class="controls">#}
+{#                                                <select id="applist" multiple="multiple" readonly  name="deployapps">#}
+{#                                                    {% for a in group_name_list %}#}
+{#                                                    <option#}
+{##}
+{#                                                            {% if a in deployapps_list  %}#}
+{#                                                                selected#}
+{#                                                            {% endif %}#}
+{#                                                            value="{{ a }}">{{ a }}</option>#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+{#                                                <span class="help-block hidden error-span" form-error="deployapps" style="color: red"></span>#}
+{#                                                <span class="help-block" style="color: blue;">选中项为最近build过的</span>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endif %}#}
+{#                                {% endif %}#}
+
+                                {% if disploy_config.deployapps_list.display %}
+
+                                    {% if job_obj.job_type == 1 or job_obj.job_type == 4 %}
+
+                                        <div class="control-group">
+
+                                            <label class="control-label">UAT部署列表</label>
+
+                                            <div  class="controls">
+                                                <ol>
+                                                    {% for i in disploy_config.deployapps_list.result_list_selected  %}
+                                                    <li><h5>{{ i }}</h5></li>
+                                                    {% endfor %}
+                                                </ol>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    {% else %}
+                                         <div class="control-group">
+                                            <label class="control-label">应用列表</label>
+                                            <div class="controls">
+                                                <select id="applist" multiple="multiple" readonly  name="deployapps" class="searchable">
+                                                    {% for a in disploy_config.deployapps_list.result_list %}
+                                                    <option
+
+                                                            {% if a in disploy_config.deployapps_list.result_list_selected  %}
+                                                                selected
+                                                            {% endif %}
+                                                            value="{{ a }}">{{ a }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <span class="help-block hidden error-span" form-error="deployapps" style="color: red"></span>
+                                                <span class="help-block" style="color: blue;">选中项为最近build过的</span>
+
+
+
+
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+
+
+
+
+
+                                        <div class="control-group">
+                                            <label class="control-label">操作类型</label>
+                                            <div class="controls">
+                                                {% if job_form.instance.action_type %}
+                                                <select name="action_type" class="span6 m-wrap" data-placeholder="Choose a Action" tabindex="1" readonly>
+                                                        <option value="{{ job_form.instance.action_type.id }}" selected>{{ job_form.instance.action_type.operation_name }}({{ job_form.instance.action_type.operation_value }})</option>
+                                                </select>
+                                                {% else %}
+                                                <select name="action_type" class="span6 m-wrap" data-placeholder="Choose a Action" tabindex="1" required>
+                                                    <option value="">Select...</option>
+                                                    {% for a in disploy_config.operation_list.result_list %}
+                                                        <option value="{{ a.id }}">{{ a.operation_name }}({{ a.operation_value }})</option>
+                                                    {% endfor %}
+                                                </select>
+
+                                                {% endif %}
+
+                                                <span class="help-block hidden error-span" form-error="action_type" style="color: red"></span>
+                                            </div>
+                                        </div>
+{#            {% if job_obj.job_type != 3 and job_obj.job_type != 4 %}#}
+{#                                {% if  job_form.instance.action_type and job_form.instance.action_type.operation_value != "build" and not job_form.instance.environment  or not job_form.instance.action_type and not job_form.instance.environment  %}#}
+{##}
+{##}
+{#                                        <div class="control-group">#}
+{#                                            <label class="control-label">所属环境</label>#}
+{#                                            <div class="controls">#}
+{#                                                <select  name="environment" class="span6 m-wrap" data-placeholder="Choose a Action" tabindex="1" >#}
+{#                                                    <option value="">Select...</option>#}
+{#                                                    {% for e in env_list %}#}
+{#                                                        <option value="{{ e.id }}">{{ e.environment_name }}</option>#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+{#                                                <span class="help-block hidden error-span" form-error="environment" style="color: red"></span>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{##}
+{#                                {% elif  job_form.instance.action_type and job_form.instance.action_type.operation_value != "build" and job_form.instance.environment %}#}
+{##}
+{##}
+{#                                        <div class="control-group">#}
+{#                                            <label class="control-label">所属环境</label>#}
+{#                                            <div class="controls">#}
+{#                                                <select name="environment" class="span6 m-wrap" data-placeholder="Choose a Action" tabindex="1" readonly>#}
+{#                                                        <option value="{{ job_form.instance.environment.id }}" selected>{{ job_form.instance.environment.environment_name }}</option>#}
+{#                                                </select>#}
+{#                                                <span class="help-block hidden error-span"  form-error="environment" style="color: red"></span>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{##}
+{#                                {% endif %}#}
+{#            {% endif %}#}
+
+
+                               {% if  disploy_config.env_list.display %}
+                                     <div class="control-group">
+                                            <label class="control-label">所属环境</label>
+                                            <div class="controls">
+                                                <select  name="environment" class="span6 m-wrap" data-placeholder="Choose a Action" tabindex="1"
+
+                                                   {% if job_form.instance.environment %}
+                                                                                             readonly >
+
+                                                       <option value="{{ job_form.instance.environment.id }}" selected>{{ job_form.instance.environment.environment_name }}</option>
+
+                                                   {% else %}
+                                                         >
+                                                    <option value="">Select...</option>
+
+                                                    {% for e in disploy_config.env_list.result_list %}
+                                                        <option value="{{ e.id }}">{{ e.environment_name }}</option>
+                                                    {% endfor %}
+                                                   {% endif %}
+                                                </select>
+                                                <span class="help-block hidden error-span" form-error="environment" style="color: red"></span>
+                                            </div>
+                                        </div>
+                               {% endif %}
+
+
+
+
+
+
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn blue" onclick="submit_form()" >Build</button>
+                                    <button type="button" class="btn">Cancel</button>
+                                </div>
+                                <!-- END FORM-->
+
+{#                            </div>#}
+                                </form>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- END SAMPLE FORM PORTLET-->
+
+        </div>
+
+    </div>
+    </div>
+
+    {% endblock %}
+{#    <div class="row-fluid">#}
+{#        <div class="alert alert-success">#}
+{#            <button class="close" data-dismiss="alert"></button>#}
+{#            <strong>Success!</strong> The page has been added.#}
+{#        </div>#}
+{#        <div>#}
+{#            <pre>defgsedfsdfsdfsdfsdfsfsdfsfdsf</pre>#}
+{#        </div>#}
+{#    </div>#}
+
+{#<div class="cover"></div>#}
+<div id="long" class="modal hide fade" tabindex="-1" data-replace="true" style="width: 80%;left: 400px;">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+		<h3 id="result-header">
+
+        </h3>
+	</div>
+	<div class="modal-body">
+		<pre id="result"></pre>
+	</div>
+	<div class="modal-footer">
+		<button type="button" data-dismiss="modal" class="btn">Close</button>
+	</div>
+</div>
+
+
+
+
+
+
+<a id="trigger_button" class=" btn blue btn-large hidden" data-toggle="modal" href="#long">View Demo</a>
+{% endblock %}
+
+{% block page-level-plugin %}
+    <script type="text/javascript" src="/static/media/js/select2.min.js"></script>
+	<script type="text/javascript" src="/static/media/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="/static/media/js/DT_bootstrap.js"></script>
+	<script type="text/javascript" src="/static/media/js/jquery.quicksearch.js"></script>
+
+{% endblock %}
+
+
+{% block page-level-scripts %}
+    <script src="/static/media/js/app.js"></script>
+    <script src="/static/media/js/jquery.multi-select.js"></script>
+
+    <script>
+
+
+        jQuery(document).ready(function () {
+
+            // initiate layout and plugins
+
+            App.init();
+{#            FormComponents.init();#}
+{#            $('#applist').multiSelect();#}
+{#        $("#select2_sample5").select2({#}
+{#            allowClear: true});#}
+
+
+{#            $("#select2_sample5").select2({#}
+{#                tags: ["red", "green", "blue", "yellow", "pink"]#}
+{#            });#}
+{##}
+            $('.select2').select2({
+                placeholder: "Select an Option",
+                allowClear: false
+            });
+        });
+
+
+        function  submit_form() {
+            $("#cover-level").removeClass("hidden");
+
+            $(".error-span").each(function () {
+                $(this).addClass("hidden");
+            });
+{#            /*#}
+{#            $.post("{% url 'job_detail' job_obj.id %}", $("#build_form").serialize(),#}
+{#               function(data){#}
+{#                   console.log(data);#}
+{##}
+{#                   var header_content = '';#}
+{#                    if (data["status"] == true) {#}
+{#                        header_content ='<div class="alert alert-success"><strong>Success!</strong></div>'#}
+{#                    } else  {#}
+{#                        header_content ='<div class="alert alert-error"><strong>Failed!</strong></div>'#}
+{##}
+{##}
+{##}
+{##}
+{#                        if (data["error_type"] == "form_error") {#}
+{#                            var error_dict = JSON.parse(data["data"]);#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#                            var flag = false;#}
+{#                            $.each(error_dict,function (key,value) {#}
+{#                                $("[form-error='"+key+"']").removeClass("hidden").text(value[0]['message']);#}
+{#                                flag = true#}
+{#                            });#}
+{##}
+{#                            if (flag == true) {#}
+{#                                $("#cover-level").addClass("hidden");#}
+{#                                return#}
+{#                            };#}
+{#                        #}
+{#                        }#}
+{##}
+{##}
+{#                        $("[name='#']")#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#                    };#}
+{#                    $("#result-header").html(header_content);#}
+{#                    $("#result").text(data["msg"]);#}
+{#                    $("#trigger_button").click();#}
+{#                    $("#cover-level").addClass("hidden");#}
+{#               }, "json");#}
+
+
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'job_detail' job_obj.id %}",
+{#                contentType : "application/json",#}
+                data: $("#build_form").serialize(),
+                success: function(data,status,xhr){
+                    var header_content = '';
+                    if (data["status"] == true) {
+                        header_content ='<div class="alert alert-success"><strong>Success!</strong></div>'
+                    } else  {
+                        header_content ='<div class="alert alert-error"><strong>Failed!</strong></div>'
+
+
+
+
+                        if (data["error_type"] == "form_error") {
+                            var error_dict = JSON.parse(data["data"]);
+
+
+
+
+
+                            var flag = false;
+                            $.each(error_dict,function (key,value) {
+                                $("[form-error='"+key+"']").removeClass("hidden").text(value[0]['message']);
+                                flag = true
+                            });
+
+                            if (flag == true) {
+                                $("#cover-level").addClass("hidden");
+                                return
+                            };
+{#                        #}
+                        }
+
+
+{#                        $("[name='#']")#}
+{##}
+
+
+
+
+                    };
+                    $("#result-header").html(header_content);
+                    $("#result").text(data["msg"]);
+                    $("#trigger_button").click();
+                    $("#cover-level").addClass("hidden");
+                },
+                error: function(xhr, status, error){
+                    alert("服务器连接异常");
+                },
+                dataType: "json"
+            });
+        };
+
+
+
+
+    $('.searchable').multiSelect({
+      selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='search'>",
+      selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='selected  search'>",
+      afterInit: function(ms){
+        var that = this,
+            $selectableSearch = that.$selectableUl.prev(),
+            $selectionSearch = that.$selectionUl.prev(),
+            selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+            selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+        that.qs1 = $selectableSearch.quicksearch(selectableSearchString).on('keydown', function(e){
+          if (e.which === 40){
+            that.$selectableUl.focus();
+            return false;
+          }
+        });
+
+        that.qs2 = $selectionSearch.quicksearch(selectionSearchString).on('keydown', function(e){
+          if (e.which == 40){
+            that.$selectionUl.focus();
+            return false;
+          }
+        });
+      },
+      afterSelect: function(){
+        this.qs1.cache();
+        this.qs2.cache();
+      },
+      afterDeselect: function(){
+        this.qs1.cache();
+        this.qs2.cache();
+      }
+    });
+
+
+
+</script>
+{% endblock %}

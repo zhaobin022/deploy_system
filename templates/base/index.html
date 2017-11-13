@@ -1,0 +1,1009 @@
+{% load deploy_tags %}
+{% load permission %}
+{% load jenkins_mgr_tags %}
+<!DOCTYPE html>
+
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+
+<!--[if !IE]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+
+<!-- BEGIN HEAD -->
+
+<head>
+
+	<meta charset="utf-8" />
+
+	<title>TJPME</title>
+
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+	<meta content="" name="description" />
+
+	<meta content="" name="author" />
+
+	<!-- BEGIN GLOBAL MANDATORY STYLES -->
+
+	<link href="/static/media/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/font-awesome-old.min.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/style-metro.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+	<link href="/static/media/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+
+	<!-- END GLOBAL MANDATORY STYLES -->
+
+	<!-- BEGIN PAGE LEVEL STYLES -->
+        {% block page-level-sytle %}
+	<link href="/static/media/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/daterangepicker.css" rel="stylesheet" type="text/css" />
+	<link href="/static/media/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/media/css/jqvmap.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="/static/media/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+
+        {% endblock %}
+	<!-- END PAGE LEVEL STYLES -->
+
+{#	<link rel="shortcut icon" href="/static/media/image/favicon.ico" />#}
+    <link rel="Shortcut Icon" href="/static/media/image/favicon.ico" type="image/x-icon">
+
+
+
+    <style>
+        .hidden{
+            display: none;
+        }
+        .logo {
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<!-- END HEAD -->
+
+<!-- BEGIN BODY -->
+
+<body class="page-header-fixed">
+<div id="cover-level" class="modal-backdrop fade in hidden"  style="vertical-align:middle;opacity:0.5; text-align:center;">
+    <img src="/static/media/image/ajax-loading.gif" style="margin-top: 25%">
+</div>
+
+	<!-- BEGIN HEADER -->
+
+	<div class="header navbar navbar-inverse navbar-fixed-top">
+
+		<!-- BEGIN TOP NAVIGATION BAR -->
+
+		<div class="navbar-inner">
+
+			<div class="container-fluid">
+
+				<!-- BEGIN LOGO -->
+
+				<a class="brand logo" href="/" style="width: 500px;height: 16px;color: #FFFFFF; margin-left: 0;text-align: left" >
+
+{#				<img src="/static/media/image/logo.png" alt="logo"/>#}
+                    天津贵金属自动化运维平台
+
+				</a>
+
+				<!-- END LOGO -->
+
+				<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+
+				<a href="javascript:;" class="btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+
+				<img src="/static/media/image/menu-toggler.png" alt="" />
+
+				</a>          
+
+				<!-- END RESPONSIVE MENU TOGGLER -->            
+
+				<!-- BEGIN TOP NAVIGATION MENU -->              
+
+				<ul class="nav pull-right">
+
+
+					<!-- BEGIN USER LOGIN DROPDOWN -->
+
+					<li class="dropdown user">
+
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            {% ifequal request.user.gender 1  %}
+						        <img alt="" src="/static/media/image/avatar1_small.jpg" />
+                            {% else %}
+                                <img alt="" src="/static/media/image/avatar2_small.jpg" />
+                            {% endifequal %}
+
+						<span class="username">
+                            {% if request.user.alias %}
+                                {{ request.user.alias }}
+                            {% else %}
+                                {{ request.user.username }}
+                            {% endif %}
+                        </span>
+
+						<i class="icon-angle-down"></i>
+
+						</a>
+
+						<ul class="dropdown-menu">
+
+							<li><a href="/admin"><i class="fa fa-th-list"></i>后台</a></li>
+
+
+
+
+							<li class="divider"></li>
+
+
+							<li><a href="{% url 'logout' %}"><i class="icon-key"></i> Log Out</a></li>
+
+						</ul>
+
+					</li>
+
+					<!-- END USER LOGIN DROPDOWN -->
+
+				</ul>
+
+				<!-- END TOP NAVIGATION MENU --> 
+			</div>
+
+		</div>
+
+		<!-- END TOP NAVIGATION BAR -->
+
+	</div>
+
+	<!-- END HEADER -->
+    <a href="https://shop303982252.taobao.com/" title="源代码设计" target="_blank">源代码设计</a>
+
+	<!-- BEGIN CONTAINER -->
+
+	<div class="page-container">
+
+		<!-- BEGIN SIDEBAR -->
+
+		<div class="page-sidebar nav-collapse collapse">
+
+			<!-- BEGIN SIDEBAR MENU -->        
+
+			<ul class="page-sidebar-menu">
+
+				<li>
+
+					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+
+					<div class="sidebar-toggler hidden-phone"></div>
+
+					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+
+				</li>
+
+				<li>
+
+					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+
+					<form class="sidebar-search">
+
+						<div class="input-box">
+
+							<a href="javascript:;" class="remove"></a>
+
+							<input type="text" placeholder="Search..." />
+
+							<input type="button" class="submit" value=" " />
+
+						</div>
+
+					</form>
+
+					<!-- END RESPONSIVE QUICK SEARCH FORM -->
+
+				</li>
+
+				<li class="start active ">
+
+					<a href="/">
+
+					<i class="icon-home"></i> 
+
+					<span class="title">Dashboard</span>
+
+					<span class="selected"></span>
+
+					</a>
+
+				</li>
+
+
+            {% block db_list_memu %}
+                {% if perms.usercenter.db_list %}
+                    <li class="">
+                        <a href="javascript:;">
+                        <i class="fa fa-database"></i>
+                        <span class="title">数据库自动化</span>
+                        <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li >
+                                <a href="{% url 'db_list' %}">
+                                     执行脚本
+                                </a>
+                            </li>
+                            <li >
+                                <a href="#">
+                                     脚本跟踪
+                                </a>
+                            </li>
+                            <li >
+                                <a href="#">
+                                     发布脚本合成
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+            {% endblock %}
+
+            {% block deploy_list_memu %}
+                {% if perms.usercenter.deploy_list %}
+                    <li class="">
+                        <a href="javascript:;">
+                        <i class="icon-th"></i>
+                        <span class="title">部署管理</span>
+                        <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+
+                            <li>
+
+                                <a href="javascript:;">
+                                部署配置管理
+                                <span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                {% gen_deploy_menu enabled_admins request "cmdb" %}
+                                </ul>
+                            </li>
+
+                            <li >
+                                <a href="#">
+                                     部署执行
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                {% endif %}
+
+            {% endblock %}
+
+
+            {% block cert_list_memu %}
+                {% if perms.usercenter.cert_list %}
+                <li class="">
+                    <a href="javascript:;">
+                    <i class="fa fa-book"></i>
+                    <span class="title">证书管理</span>
+                    <span class="arrow "></span>
+                    </a>
+                    <ul class="sub-menu">
+                        {% gen_deploy_menu enabled_admins request "certmgr" %}
+                    </ul>
+                </li>
+                {% endif %}
+            {% endblock %}
+
+            {% block releasemgr_list_memu %}
+                {% if perms.usercenter.releasemgr_list %}
+                <li class="">
+                    <a href="javascript:;">
+                    <i class="fa fa-book"></i>
+                    <span class="title">发布任务管理</span>
+                    <span class="arrow "></span>
+                    </a>
+                    <ul class="sub-menu">
+                        {% gen_deploy_menu enabled_admins request "releasemgr" %}
+                    </ul>
+                </li>
+                {% endif %}
+            {% endblock %}
+
+
+            {% block jenkins_mgr_memu %}
+                {% if perms.usercenter.jenkins_server_list %}
+                <li class="">
+                    <a href="javascript:;">
+                    <i class="fa fa-window-maximize"></i>
+                    <span class="title">Jenkins管理</span>
+                    <span class="arrow "></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="active">
+                        <a href="/jenkinsmgr/jenkinsserver_list">
+                            Jenkins服务器列表
+                        </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            {% endblock %}
+			</ul>
+
+			<!-- END SIDEBAR MENU -->
+
+		</div>
+
+		<!-- END SIDEBAR -->
+
+		<!-- BEGIN PAGE -->
+
+		<div class="page-content">
+
+			<!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+			<div id="portlet-config" class="modal hide">
+
+				<div class="modal-header">
+
+					<button data-dismiss="modal" class="close" type="button"></button>
+
+					<h3>Widget Settings</h3>
+
+				</div>
+
+				<div class="modal-body">
+
+					Widget settings form goes here
+
+				</div>
+
+			</div>
+
+			<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+			<!-- BEGIN PAGE CONTAINER-->
+
+			<div class="container-fluid">
+
+                {% block container-fluid %}
+				<!-- BEGIN PAGE HEADER-->
+
+				<div class="row-fluid">
+
+					<div class="span12">
+
+{% include "base/style-custom.html" %}
+
+						<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+
+						<h3 class="page-title">
+
+							Dashboard <small>statistics and more</small>
+
+						</h3>
+
+						<ul class="breadcrumb">
+
+							<li>
+
+								<i class="icon-home"></i>
+
+								<a href="/">Home</a>
+
+								<i class="icon-angle-right"></i>
+
+							</li>
+
+							<li><a href="#">Dashboard</a></li>
+
+							<li class="pull-right no-text-shadow">
+
+								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top" data-original-title="Change dashboard date range">
+
+									<i class="icon-calendar"></i>
+
+									<span></span>
+
+									<i class="icon-angle-down"></i>
+
+								</div>
+
+							</li>
+
+						</ul>
+
+						<!-- END PAGE TITLE & BREADCRUMB-->
+
+					</div>
+
+				</div>
+
+				<!-- END PAGE HEADER-->
+
+				<div id="dashboard">
+
+					<!-- BEGIN DASHBOARD STATS -->
+
+					<div class="row-fluid">
+
+						<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+
+							<div class="dashboard-stat blue">
+
+								<div class="visual">
+
+									<i class="fa fa-user"></i>
+
+								</div>
+
+								<div class="details">
+
+									<div class="number">
+
+										{% get_current_user_count %}
+
+									</div>
+
+									<div class="desc">                           
+										Current Users
+									</div>
+
+								</div>
+
+								<a class="more" href="#">
+
+								View more <i class="m-icon-swapright m-icon-white"></i>
+
+								</a>                 
+
+							</div>
+
+						</div>
+
+						<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+
+							<div class="dashboard-stat green">
+
+								<div class="visual">
+
+									<i class="fa fa-server"></i>
+
+								</div>
+
+								<div class="details">
+
+									<div class="number">{% get_current_server_count %}</div>
+
+									<div class="desc">Current Servers</div>
+
+								</div>
+
+								<a class="more" href="{% url 'kingadmin_index' 'cmdb' 'hosts' %}">
+
+								View more <i class="m-icon-swapright m-icon-white"></i>
+
+								</a>                 
+
+							</div>
+
+						</div>
+
+						<div class="span3 responsive" data-tablet="span6  fix-offset" data-desktop="span3">
+
+							<div class="dashboard-stat purple">
+
+								<div class="visual">
+
+									<i class="fa fa-book"></i>
+
+								</div>
+
+								<div class="details">
+
+									<div class="number">{% get_current_cert_count %}</div>
+
+									<div class="desc">Certificates</div>
+
+								</div>
+
+								<a class="more" href="{% url 'certmgr_index' 'certmgr' 'certificate' %}">
+
+								View more <i class="m-icon-swapright m-icon-white"></i>
+
+								</a>                 
+
+							</div>
+
+						</div>
+
+						<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+
+							<div class="dashboard-stat yellow">
+
+								<div class="visual">
+
+									<i class="fa fa-database"></i>
+
+								</div>
+
+								<div class="details">
+
+									<div class="number">{% get_db_count %}</div>
+
+									<div class="desc">Databases</div>
+
+								</div>
+
+								<a class="more" href="{% url "db_list" %}">
+
+								View more <i class="m-icon-swapright m-icon-white"></i>
+
+								</a>                 
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- END DASHBOARD STATS -->
+
+					<div class="clearfix"></div>
+
+					<div class="row-fluid">
+
+						<div class="span6">
+
+							<!-- BEGIN PORTLET-->
+
+							<div class="portlet box blue">
+
+								<div class="portlet-title">
+
+									<div class="caption"><i class="icon-bar-chart"></i>LOAD</div>
+
+
+								</div>
+
+								<div class="portlet-body">
+                                <div id="load"></div>
+								</div>
+
+							</div>
+
+							<!-- END PORTLET-->
+
+						</div>
+
+						<div class="span6">
+
+							<!-- BEGIN PORTLET-->
+
+
+							<div class="portlet box blue">
+
+								<div class="portlet-title">
+
+									<div class="caption"><i class="icon-bar-chart"></i>MEMORY</div>
+
+
+								</div>
+
+								<div class="portlet-body">
+                                <div id="memory"></div>
+								</div>
+
+							</div>
+							<!-- END PORTLET-->
+
+
+						</div>
+
+					</div>
+
+					<div class="clearfix"></div>
+
+
+					<div class="clearfix"></div>
+
+
+					<div class="clearfix"></div>
+
+
+				</div>
+
+                {% endblock %}
+
+			</div>
+
+			<!-- END PAGE CONTAINER-->    
+		</div>
+
+		<!-- END PAGE -->
+
+	</div>
+
+	<!-- END CONTAINER -->
+
+	<!-- BEGIN FOOTER -->
+
+	<div class="footer">
+
+		<div class="footer-inner">
+
+Copyright © 2017 TJPME. All rights reserved. © 2017 天津贵金属交易所 版权所有
+		</div>
+
+		<div class="footer-tools">
+
+			<span class="go-top">
+
+			<i class="icon-angle-up"></i>
+
+			</span>
+
+		</div>
+
+	</div>
+
+	<!-- END FOOTER -->
+
+	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+
+	<!-- BEGIN CORE PLUGINS -->
+
+	<script src="/static/media/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+
+	<!-- IMPORTANT! Load jquery-ui-1.10.1.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+
+	<script src="/static/media/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/bootstrap.min.js" type="text/javascript"></script>
+
+	<!--[if lt IE 9]>
+
+	<script src="media/js/excanvas.min.js"></script>
+	<script src="media/js/respond.min.js"></script>
+
+	<![endif]-->
+
+	<script src="/static/media/js/jquery.slimscroll.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.blockui.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.cookie.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.uniform.min.js" type="text/javascript" ></script>
+
+	<!-- END CORE PLUGINS -->
+
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+{% block page-level-plugin %}
+	<script src="/static/media/js/jquery.vmap.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.vmap.russia.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.vmap.world.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.vmap.europe.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.vmap.germany.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.vmap.usa.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.vmap.sampledata.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.flot.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.flot.resize.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.pulsate.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/date.js" type="text/javascript"></script>
+	<script src="/static/media/js/daterangepicker.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.gritter.js" type="text/javascript"></script>
+	<script src="/static/media/js/fullcalendar.min.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.easy-pie-chart.js" type="text/javascript"></script>
+	<script src="/static/media/js/jquery.sparkline.min.js" type="text/javascript"></script>
+    <script src="/static/media/js/highstock.js" type="text/javascript"></script>
+    <script src="/static/media/js/exporting.js" type="text/javascript"></script>
+
+    {% endblock %}
+	<!-- END PAGE LEVEL PLUGINS -->
+
+	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+{% block page-level-scripts %}
+	<script src="/static/media/js/app.js" type="text/javascript"></script>
+	<script src="/static/media/js/index.js" type="text/javascript"></script>
+    	<script>
+
+		jQuery(document).ready(function() {
+
+		   App.init(); // initlayout and core plugins
+
+		   Index.init();
+
+
+		   Index.initCharts(); // init index page's custom scripts
+
+{#		   Index.initChat();#}
+
+		   Index.initMiniCharts();
+
+		   Index.initDashboardDaterange();
+
+{#		   Index.initIntro();#}
+{#		   Highcharts.setOptions({global: {useUTC: false}});#}
+{#            $('#container').highcharts('StockChart', {#}
+{#                chart: {#}
+{#                    renderTo: 'container',#}
+{#                    type: 'spline',#}
+{#                    marginRight: 10,#}
+{#                    events: {#}
+{#                        load: function () {#}
+{#                            var series = this.series;#}
+{#                            interval_fun = setInterval(function () {#}
+{#                                $.getJSON("{% url 'get_load' %}",function(data) {#}
+{#                                     $.each( data,function(n,key) {#}
+{#                                            console.log(key);#}
+{#                                            load1 = key[0];#}
+{#                                            load2 = key[1];#}
+{#                                            load3 = key[2];#}
+{#                                            t = key[3]#}
+{##}
+{#                                            series[0].addPoint([load1, t], true, true);#}
+{#                                            series[1].addPoint([load2, t], true, true);#}
+{#                                            series[2].addPoint([load3, t], true, true);#}
+{##}
+{#                                     });#}
+{#                                });#}
+{#                            },2000);#}
+{##}
+{#                        }#}
+{#                    }#}
+{#                },#}
+{#                rangeSelector : {#}
+{#                    selected : 1#}
+{#                },#}
+{#                title : {#}
+{#                    text : 'LOAD'#}
+{#                },#}
+{#                legend: {#}
+{#                    enabled: true,#}
+{#                    layout: 'horizontal'#}
+{#                },#}
+{#                series : [#}
+{#                    {#}
+{#                        name : 'load1',#}
+{#                        tooltip: {#}
+{#                            valueDecimals: 2#}
+{#                        }#}
+{#                    },#}
+{#                    {#}
+{#                        name : 'load2',#}
+{#                        tooltip: {#}
+{#                            valueDecimals: 2#}
+{#                        }#}
+{#                    },#}
+{#                    {#}
+{#                        name : 'load3',#}
+{#                        tooltip: {#}
+{#                            valueDecimals: 2#}
+{#                        }#}
+{#                    },#}
+{#                ]#}
+{##}
+{#            });#}
+{##}
+{#		});#}
+
+
+          $.getJSON("{% url 'get_all_load' %}",function(all_data) {
+
+
+
+
+                Highcharts.setOptions({
+                    global : {
+                        useUTC : false
+                    }
+                });
+                // Create the chart
+                $('#load').highcharts('StockChart', {
+{#                    chart : {#}
+{#                        events : {#}
+{#                            load : function () {#}
+{#                                // set up the updating of the chart each second#}
+{#                                var s = this.series;#}
+{#                                interval_fun = setInterval(function () {#}
+{#                                    $.getJSON("{% url 'get_load' %}",function(data) {#}
+{#                                        console.log(data);#}
+{#                                        if (data.status == true) {#}
+{#                                            var data_list = data.data;#}
+{#                                            var l1 = data_list[0];#}
+{#                                            var l2 = data_list[1];#}
+{#                                            var l3 = data_list[2];#}
+{#                                            var t = data_list[3];#}
+{#                                            s[0].addPoint([t, l1], true, true);#}
+{#                                            s[1].addPoint([t, l2], true, true);#}
+{#                                            s[2].addPoint([t, l3], true, true);#}
+{##}
+{#                                        } else {#}
+{#                                            alert(data.msg);#}
+{#                                        };#}
+{#                                    });#}
+{#                                },1000)#}
+{#                            }#}
+{#                        }#}
+{#                    },#}
+                    rangeSelector: {
+                        buttons: [{
+                            count: 1,
+                            type: 'minute',
+                            text: '1M'
+                        }, {
+                            count: 5,
+                            type: 'minute',
+                            text: '5M'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }],
+                        inputEnabled: false,
+                        selected: 0
+                    },
+                    legend: {
+                        enabled: true,
+                        layout: 'horizontal'
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series : [
+                            {
+                                name : 'load1',
+                                data:all_data["load1"]
+                            },
+                            {
+                              name : 'load2',
+                                 data:all_data["load2"]
+                            },
+                            {
+                               name : 'load3',
+                                 data:all_data["load3"]
+                            }
+                    ]
+                });
+            });
+
+
+
+
+
+
+          $.getJSON("{% url 'get_all_memory' %}",function(all_data) {
+
+
+
+
+                Highcharts.setOptions({
+                    global : {
+                        useUTC : false
+                    }
+                });
+                // Create the chart
+                $('#memory').highcharts('StockChart', {
+{#                    chart : {#}
+{#                        events : {#}
+{#                            load : function () {#}
+{#                                // set up the updating of the chart each second#}
+{#                                var s = this.series;#}
+{#                                interval_fun = setInterval(function () {#}
+{#                                    $.getJSON("{% url 'get_load' %}",function(data) {#}
+{#                                        console.log(data);#}
+{#                                        if (data.status == true) {#}
+{#                                            var data_list = data.data;#}
+{#                                            var l1 = data_list[0];#}
+{#                                            var l2 = data_list[1];#}
+{#                                            var l3 = data_list[2];#}
+{#                                            var t = data_list[3];#}
+{#                                            s[0].addPoint([t, l1], true, true);#}
+{#                                            s[1].addPoint([t, l2], true, true);#}
+{#                                            s[2].addPoint([t, l3], true, true);#}
+{##}
+{#                                        } else {#}
+{#                                            alert(data.msg);#}
+{#                                        };#}
+{#                                    });#}
+{#                                },1000)#}
+{#                            }#}
+{#                        }#}
+{#                    },#}
+                    rangeSelector: {
+                        buttons: [{
+                            count: 1,
+                            type: 'minute',
+                            text: '1M'
+                        }, {
+                            count: 5,
+                            type: 'minute',
+                            text: '5M'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }],
+                        inputEnabled: false,
+                        selected: 0
+                    },
+                    legend: {
+                        enabled: true,
+                        layout: 'horizontal'
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series : [
+                            {
+                                name : 'total',
+                                data:all_data["total"]
+                            },
+                            {
+                              name : 'used',
+                                 data:all_data["used"]
+                            },
+                            {
+                               name : 'free',
+                                 data:all_data["free"]
+                            }
+                    ],
+                    tooltip: {
+                            pointFormatter: function() {
+                                var ret = '';
+                                if (this.y >= 1000) {
+                                    ret = (this.y / 1024).toFixed(2) + "G";
+                                } else if (this.y ==0) {
+                                    ret = this.y;
+                                }
+                                else {
+                                    ret = (this.y).toFixed(2) + "M";
+                                };
+                                return '<span style="color:'+this.series.color+'">'+this.series.name+'</span>: <b>'+ret+'</b><br/>'
+
+                            }
+                    },
+                    yAxis: {
+{#                        title: {#}
+{#                            text: ' M'#}
+{#                        },#}
+{#                        plotLines: [{#}
+{#                            value: 0,#}
+{#                            width: 1,#}
+{#                            color: '#808080'#}
+{#                        }],#}
+                        labels: {
+                            formatter: function() {
+                                var ret = '';
+                                if (this.value >= 1000) {
+                                    ret = (this.value / 1024).toFixed(2) + "G";
+                                } else if (this.value ==0) {
+                                    ret = this.value;
+                                }
+                                else {
+                                    ret = (this.value).toFixed(2) + "M";
+                                }
+
+                                return ret;
+                            }
+                        }
+                    },
+                });
+            });
+ });
+	</script>
+
+	<!-- END JAVASCRIPTS -->
+{% endblock %}
+	<!-- END PAGE LEVEL SCRIPTS -->  
+
+
+
+</body>
+
+<!-- END BODY -->
+
+</html>

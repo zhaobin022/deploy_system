@@ -1,0 +1,32 @@
+{% load deploy_tags %}
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+<h3 class="page-title">
+      证书管理
+    ({% get_model_verbose_name admin_obj %})
+
+</h3>
+
+<ul class="breadcrumb">
+    {% block right-breadcrumb %}
+
+        <li>
+
+            <i class="icon-home"></i>
+
+            <a href="/">Home</a>
+
+            <i class="icon-angle-right"></i>
+
+        </li>
+
+        <li>
+            <a href="#">证书管理</a>
+            <i class="icon-angle-right"></i>
+        </li>
+
+        <li>
+            <a href="{% get_model_list_url admin_obj %}">{% get_model_verbose_name admin_obj %}</a>
+        </li>
+    {% endblock %}
+</ul>
+<!-- END PAGE TITLE & BREADCRUMB-->
